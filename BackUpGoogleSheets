@@ -1,0 +1,45 @@
+function backupsystem() {
+//DESCRIPTION OF SCRIPT
+//This script backs up your Google Sheet with a time stamp into another Google Drive folder that you specify.
+
+//WHAT IT DOES
+//1. Copies your spreadsheet with a new filename of the sheet's name with a timestamp of the current time based from Google Account.
+//2. Puts the copied file in the Google Drive folder that you specify.
+
+//HOW TO SET UP
+//STEP 0. In your Google Sheet page in the menu bar, click on "Tools" and then "<> Script Editor".
+//STEP 1. Copy and paste this code into the file.
+//STEP 2. Turn on/off the backsups by changing the backup var to 'true' or 'false'.
+//STEP 3a. Change the destinationfolderid variable to match your Google Folders URL. 
+//STEP 3a. For example, "https://drive.google.com/drive/folders/1Q393UvHbMyWJWw4FA3B-dVih_vkPt0wet" would be var destinationfolderid = '1Q393UvHbMyWJWw4FA3B-dVih_vkPt0wet'
+//STEP 4. Click the save button in the Google Apps Script panel.
+//STEP 5. Click on the "Triggers" button.
+//STEP 6. On the Triggers page, click on add a trigger in the bottom right hand corner of the page, 
+//STEP 6a. Set your trigger to run your 'backupsystem' function.
+//STEP 6b. Set the event source to be 'time driven', 'type of time based trigger' to be day, and then finally set the hour of the day you want to run it.
+//STEP 6c. Save it, and now it's all set to run :)
+
+//TURN ON (OFF) THE BACKUP
+//Change this to 'false' if you want to turn off the backups.
+var backup = 'true'
+
+if (backup == 'false'){return};
+  if (backup == 'true'){
+var formattedDate = Utilities.formatDate(new Date(), "GMT", "yyyy-MM-dd' 'HH:mm:ss");
+
+// Gets the name of the original file and appends the word "Backup" followed by the timestamp stored in formattedDate
+var name = SpreadsheetApp.getActiveSpreadsheet().getName() + " - Backup - " + formattedDate;
+
+// Gets the destination folder by its ID. 
+// REPLACE 'ENTER DESTINATION FOLDER ID HERE' with your destination folder id grabbed from the URL of your folder in Google Drive.
+// For example, "https://drive.google.com/drive/folders/1Q393UvHbMyWJWw4FA3B-dVih_vkPt0wet" would be var destinationfolderid = '1Q393UvHbMyWJWw4FA3B-dVih_vkPt0wet'
+var destinationfolderid = 'ENTER DESTINATION FOLDER ID HERE'
+var destination = DriveApp.getFolderById(destinationfolderid);
+
+// Grabs the ID of your current Google Sheet.
+var file = DriveApp.getFileById(SpreadsheetApp.getActiveSpreadsheet().getId())
+
+// Makes copy of your spreadsheet with its name, backup, and time saved into your folder.
+// For example, a spreadsheet by the name of "Bill Files" would be saved as "Bill Files - Backup - 2018-11-02 01:08:02"
+file.makeCopy(name, destination);
+  };
